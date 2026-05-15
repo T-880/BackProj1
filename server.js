@@ -7,6 +7,7 @@ dotenv.config();
 const connectDB = require("./config/db");
 
 const menuRoutes = require("./routes/menuRoutes");
+const authRoutes = require("./routes/authRoutes");
 
 const app = express();
 
@@ -15,6 +16,7 @@ connectDB();
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use("/api/auth", authRoutes);
 app.use("/api/menu", menuRoutes);
 
 // Testar route
