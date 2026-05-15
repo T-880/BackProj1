@@ -40,4 +40,45 @@ router.post("/", authMiddleware, async (req, res) => {
   }
 });
 
+// Uppdaterar menyobjekt (för endast admin)
+router.put("/:id", authMiddleware, async (req, res) => {
+  try {
+    const updatedItem = await MenuItem.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
+
+    if (!updatedItem) {
+      return res.status(404).json({ message: "Menyobjekt hittades inte" });
+    }
+
+    res.json({
+      message: "Menyobjekt uppdaterat",
+      item: updatedItem,
+    });
+
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+// Tar bort menyobjekt (för endast admin)
+router.delete("/:id", authMiddleware, async (req, res) => {
+  try {
+    const deletedItem = await MenuItem.findByIdAndDelete(req.params.id);
+
+    if (!deletedItem) {
+      return res.status(404).json({ message: "Menyobjekt hittades inte" });
+    }
+
+    res.json({
+      message: "Menyobjekt borttaget",
+    });
+
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 module.exports = router;
