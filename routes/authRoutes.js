@@ -17,7 +17,13 @@ router.post(
   async (req, res) => {
     try {
 
-      const { username, password } = req.body;
+      const {
+        username,
+        password,
+        role,
+        fullName,   
+        phone       
+      } = req.body;
 
       // Kontrollerar om användaren redan finns
       const existingUser = await User.findOne({ username });
@@ -35,6 +41,9 @@ router.post(
       const newUser = new User({
         username,
         password: hashedPassword,
+        fullName,
+        phone,
+        role
       });
 
       await newUser.save();
@@ -45,10 +54,10 @@ router.post(
 
     } catch (error) {
 
-      res.status(500).json({
-        message: "Serverfel",
-      });
-    }
+  res.status(500).json({
+    message: "Serverfel",
+  });
+}
   }
 );
 
@@ -57,7 +66,10 @@ router.post(
 router.post("/login", async (req, res) => {
   try {
 
-    const { username, password } = req.body;
+    const {
+      username,
+      password
+    } = req.body;
 
     // Kontrollerar användaren
     const user = await User.findOne({ username });
@@ -103,5 +115,58 @@ router.post("/login", async (req, res) => {
     });
   }
 });
+
+// Hämta alla användare 
+router.get(
+  "/users",
+  authMiddleware,
+  roleMiddleware(["chef"]),
+  async (req, res) => {
+
+    try {
+
+      const users = await User.find().select("-password");
+
+      res.json(users);
+
+    } catch (error) {
+
+      res.status(500).json({
+        message: "Serverfel",
+      });
+    }
+  }
+);
+
+
+// Ta bort användare
+router.delete(
+  "/users/:id",
+  authMiddleware,
+  roleMiddleware(["chef"]),
+  async (req, res) => {
+
+    try {
+
+      const deletedUser = await User.findByIdAndDelete(req.params.id);
+
+      if (!deletedUser) {
+        return res.status(404).json({
+          message: "Användare hittades inte",
+        });
+      }
+
+      res.json({
+        message: "Användare borttagen",
+      });
+
+    } catch (error) {
+
+      res.status(500).json({
+        message: "Serverfel",
+      });
+    }
+  }
+);
 
 module.exports = router;

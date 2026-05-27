@@ -54,6 +54,15 @@ router.put(
   roleMiddleware(["chef", "admin"]),
   async (req, res) => {
     try {
+
+      if (req.body.monthly_special === true) {
+
+        await MenuItem.updateMany(
+          {},
+          { $set: { monthly_special: false } }
+        );
+      }
+
       const updatedItem = await MenuItem.findByIdAndUpdate(
         req.params.id,
         req.body,
