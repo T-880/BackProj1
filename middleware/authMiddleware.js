@@ -23,8 +23,11 @@ const authMiddleware = (req, res, next) => {
     // Verifierar token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    // Sparar userId i requesten
-    req.user = decoded.userId;
+    // Sparar userId i requesten + roll
+    req.user = {
+      userId: decoded.userId,
+      role: decoded.role
+    };
 
     // Går vidare till nästa funktion
     next();
