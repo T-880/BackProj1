@@ -13,6 +13,8 @@ const app = express();
 
 connectDB();
 
+app.use(express.static("public"));
+
 // Middleware
 app.use(cors());
 app.use(express.json());
