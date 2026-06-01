@@ -130,4 +130,4 @@ Systemet använder två middleware-funktioner:
 API:et används av både en publik frontend och ett administrationsgränssnitt via följande bas-URL:
 
 
-http://localhost:5000/api
+http://localhost:5000
