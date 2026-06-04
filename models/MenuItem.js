@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 
+// Schema för menyobjekt som lagras i databasen
 const menuItemSchema = new mongoose.Schema({
   title: {
     type: String,
@@ -24,16 +25,19 @@ const menuItemSchema = new mongoose.Schema({
     type: String,
   },
 
+  // Markerar om rätten är månadens special
   monthly_special: {
     type: Boolean,
     default: false,
   },
 
+  // Datum då menyobjektet skapades
   created_at: {
     type: Date,
     default: Date.now,
   },
 
+  // Referens till användaren som skapade menyobjektet
   created_by: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",

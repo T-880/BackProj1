@@ -4,6 +4,7 @@ const dotenv = require("dotenv");
 
 dotenv.config();
 
+// Importerar databasanslutning och routes
 const connectDB = require("./config/db");
 
 const menuRoutes = require("./routes/menuRoutes");
@@ -11,13 +12,17 @@ const authRoutes = require("./routes/authRoutes");
 
 const app = express();
 
+// Ansluter till MongoDB
 connectDB();
 
+// Gör filer i public-mappen tillgängliga
 app.use(express.static("public"));
 
 // Middleware
 app.use(cors());
 app.use(express.json());
+
+// API-routes
 app.use("/api/auth", authRoutes);
 app.use("/api/menu", menuRoutes);
 

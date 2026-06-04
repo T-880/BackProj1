@@ -8,8 +8,7 @@ const router = express.Router();
 
 const User = require("../models/User");
 
-
-// Registrera
+// Registrera ny användare (endast chef har behörighet)
 router.post(
   "/register",
   authMiddleware,
@@ -34,10 +33,10 @@ router.post(
         });
       }
 
-      // Hashar lösenord
+      // Hashar lösenord innan lagring
       const hashedPassword = await bcrypt.hash(password, 10);
 
-      // Skapar användare
+      // Skapar ny användare
       const newUser = new User({
         username,
         password: hashedPassword,
@@ -54,15 +53,15 @@ router.post(
 
     } catch (error) {
 
-  res.status(500).json({
-    message: "Serverfel",
-  });
-}
+      res.status(500).json({
+        message: "Serverfel",
+      });
+    }
   }
 );
 
 
-// Login
+// Login - autentisering av användare
 router.post("/login", async (req, res) => {
   try {
 
@@ -71,7 +70,7 @@ router.post("/login", async (req, res) => {
       password
     } = req.body;
 
-    // Kontrollerar användaren
+    // Kontrollerar om användaren finns
     const user = await User.findOne({ username });
 
     if (!user) {
@@ -80,7 +79,7 @@ router.post("/login", async (req, res) => {
       });
     }
 
-    // Kontrollerar lösenordet
+    // Jämför lösenord med hash
     const passwordMatch = await bcrypt.compare(
       password,
       user.password
@@ -92,7 +91,7 @@ router.post("/login", async (req, res) => {
       });
     }
 
-    // Skapar JWT token
+    // Skapar JWT-token för inloggning
     const token = jwt.sign(
       {
         userId: user._id,
@@ -116,7 +115,7 @@ router.post("/login", async (req, res) => {
   }
 });
 
-// Hämta alla användare 
+// Hämta alla användare (endast chef)
 router.get(
   "/users",
   authMiddleware,
@@ -138,8 +137,7 @@ router.get(
   }
 );
 
-
-// Ta bort användare
+// Ta bort användare (endast chef)
 router.delete(
   "/users/:id",
   authMiddleware,

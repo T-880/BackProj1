@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 
+// Schema för användare som kan logga in i administrationssystemet
 const userSchema = new mongoose.Schema({
   username: {
     type: String,
@@ -22,6 +23,7 @@ const userSchema = new mongoose.Schema({
     required: true,
   },
 
+  // Användarroll som styr behörighet i systemet
   role: {
     type: String,
     enum: ["chef", "admin"],
