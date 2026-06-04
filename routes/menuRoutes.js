@@ -89,7 +89,7 @@ router.put(
 router.delete(
   "/:id",
   authMiddleware,
-  roleMiddleware(["chef"]),
+  roleMiddleware(["chef", "admin"]),
   async (req, res) => {
     try {
       const deletedItem = await MenuItem.findByIdAndDelete(req.params.id);
